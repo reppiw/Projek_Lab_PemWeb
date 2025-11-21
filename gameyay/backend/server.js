@@ -14,24 +14,41 @@ const pool = new Pool({
     port: 5432,
 });
 
-app.post("/score", async (req, res) => {
-    const { score } = req.body;
-
-    await pool.query(
-        "INSERT INTO highscores (score) VALUES ($1)",
-        [score]
-    );
-
-    res.json({ status: "ok" });
+// GET HIGHSCORES
+app.get("/highscores", async (req, res) => {
+    try {
+        const result = await pool.query(
+            "SELECT name, score FROM highscores ORDER BY score DESC LIMIT 10"
+        );
+        res.json(result.rows);
+    } catch (err) {
+        res.status(500).send(err);
+    }
 });
 
+// SAVE SCORE
+app.post("/highscores", async (req, res) => {
+    const { name, score } = req.body;
 
-app.get("/leaderboard", async (req, res) => {
-    const result = await pool.query(
-        "SELECT score, created_at FROM highscores ORDER BY score DESC LIMIT 10"
-    );
+    try {
+        await pool.query(
+            "INSERT INTO highscores (name, score) VALUES ($1, $2)",
+            [name, score]
+        );
+        res.json({ message: "Saved!" });
+    } catch (err) {
+        res.status(500).send(err);
+    }
+});
 
-    res.json(result.rows);
+// RESET
+app.delete("/highscores", async (req, res) => {
+    try {
+        await pool.query("DELETE FROM highscores");
+        res.json({ message: "Highscores cleared!" });
+    } catch (err) {
+        res.status(500).send(err);
+    }
 });
 
 app.listen(3000, () => console.log("Server running on port 3000"));
