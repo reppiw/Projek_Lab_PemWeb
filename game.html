@@ -1,0 +1,300 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <title>Simple Shooter</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <style>
+        html,body{height:100%;margin:0;background:#222;color:#fff;font-family:sans-serif}
+        .wrap{display:flex;flex-direction:column;align-items:center;padding:12px}
+        canvas{background:linear-gradient(#7ec0ff,#87ceeb 60%);border:4px solid #333;border-radius:6px;display:block}
+        .hud{width:800px;display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
+        .score{font-size:18px}
+        .instructions{font-size:13px;opacity:.85}
+        @media(max-width:820px){canvas{width:100%;height:auto}}
+    </style>
+</head>
+<body>
+    <div class="wrap">
+        <div class="hud">
+            <div class="score">Score: <span id="score">0</span></div>
+            <div style="display:flex;flex-direction:column;align-items:flex-end;gap:6px">
+                <div style="display:flex;gap:8px;align-items:center">
+                    <button id="saveScore" style="background:#444;color:#fff;border:0;padding:6px 10px;border-radius:6px;cursor:pointer">Save Score</button>
+                    <button id="resetHS" style="background:#633;color:#fff;border:0;padding:6px 10px;border-radius:6px;cursor:pointer">Reset Highscores</button>
+                </div>
+                <div id="highscores" style="min-width:220px;background:rgba(0,0,0,0.25);padding:6px 8px;border-radius:6px;font-size:13px">
+                    <strong style="display:block;margin-bottom:6px">Highscores</strong>
+                    <div id="hsList">(loading...)</div>
+                </div>
+            </div>
+        </div>
+        <canvas id="game" width="800" height="480"></canvas>
+    </div>
+
+    <script>
+
+    const canvas = document.getElementById('game');
+    const ctx = canvas.getContext('2d');
+    const W = canvas.width, H = canvas.height;
+    const groundY = Math.round(H * 0.78);
+
+    const sprites = {
+        background: new Image(),
+        player: new Image(),
+        enemy: new Image(),
+        bullet: new Image(),
+        floor: new Image()
+    };
+
+    sprites.background.src = "game/background.png";
+    sprites.player.src = "game/player.png";
+    sprites.enemy.src = "game/enemy.png";
+    sprites.bullet.src = "game/bullet.png";
+    sprites.floor.src = "game/floor.png";
+
+    // Game objects
+    let player = {
+        x: W / 2,
+        y: groundY - 48,
+        w: 40,
+        h: 48,
+        facing: 1 // 1 = right, -1 = left
+    };
+
+    let bullets = []; // {x,y,vx,vy,r}
+    let enemies = []; // {x,y,w,h,vx}
+    let score = 0;
+
+    const scoreEl = document.getElementById('score');
+
+    // Highscore persistence (localStorage)
+    const HIGHSCORE_KEY = 'geometrisatu_highscores_v1';
+    const hsListEl = document.getElementById('hsList');
+    const saveBtn = document.getElementById('saveScore');
+    const resetBtn = document.getElementById('resetHS');
+
+    function loadHighscores() {
+        try {
+            const raw = localStorage.getItem(HIGHSCORE_KEY);
+            return raw ? JSON.parse(raw) : [];
+        } catch (e) {
+            console.warn('Failed to load highscores', e);
+            return [];
+        }
+    }
+
+    function writeHighscores(list) {
+        try {
+            localStorage.setItem(HIGHSCORE_KEY, JSON.stringify(list));
+        } catch (e) {
+            console.warn('Failed to write highscores', e);
+        }
+    }
+
+    function saveHighscore(name, sc) {
+        const list = loadHighscores();
+        list.push({name: name || 'Player', score: sc || 0, date: new Date().toISOString()});
+        list.sort((a,b) => b.score - a.score || new Date(a.date) - new Date(b.date));
+        const top = list.slice(0, 10);
+        writeHighscores(top);
+        renderHighscores();
+    }
+
+    function resetHighscores() {
+        localStorage.removeItem(HIGHSCORE_KEY);
+        renderHighscores();
+    }
+
+    function renderHighscores() {
+        const list = loadHighscores();
+        if (!hsListEl) return;
+        if (!list || list.length === 0) {
+            hsListEl.textContent = '(no highscores yet)';
+            return;
+        }
+        hsListEl.innerHTML = '';
+        const ul = document.createElement('ol');
+        ul.style.margin = '0';
+        ul.style.padding = '0';
+        ul.style.listStyle = 'decimal';
+        ul.style.fontSize = '13px';
+        for (let i=0;i<list.length;i++) {
+            const it = list[i];
+            const li = document.createElement('li');
+            li.style.marginBottom = '4px';
+            li.textContent = `${it.name} — ${it.score}`;
+            ul.appendChild(li);
+        }
+        hsListEl.appendChild(ul);
+    }
+
+    // wire up buttons
+    if (saveBtn) saveBtn.addEventListener('click', () => {
+        if (score <= 0) { alert('Score is zero — play to score points before saving.'); return; }
+        const name = prompt('Name for highscore (max 20 chars):', 'Player') || 'Player';
+        saveHighscore(name.substring(0,20), score);
+    });
+    if (resetBtn) resetBtn.addEventListener('click', () => {
+        if (confirm('Reset all highscores?')) resetHighscores();
+    });
+
+    // initial render
+    renderHighscores();
+
+    let spawnTimer = 0;
+    const spawnInterval = 1000; // ms
+    function spawnEnemy() {
+        const fromLeft = Math.random() < 0.5;
+        const speed = 1.0 + Math.random() * 1.2;
+        const w = 36, h = 40;
+        const x = fromLeft ? -w - 10 : W + 10;
+        const y = groundY - h;
+        const vx = fromLeft ? speed : -speed;
+        enemies.push({x,y,w,h,vx});
+    }
+
+    let keyLeft = false, keyRight = false;
+    window.addEventListener('keydown', e => {
+        if (e.key === 'ArrowLeft' || e.key === 'a') { keyLeft = true; player.facing = -1; }
+        if (e.key === 'ArrowRight' || e.key === 'd') { keyRight = true; player.facing = 1; }
+        if (e.code === 'Space') { shoot(player.facing); e.preventDefault(); }
+    });
+    window.addEventListener('keyup', e => {
+        if (e.key === 'ArrowLeft' || e.key === 'a') keyLeft = false;
+        if (e.key === 'ArrowRight' || e.key === 'd') keyRight = false;
+    });
+
+    canvas.addEventListener('pointerdown', e => {
+        const rect = canvas.getBoundingClientRect();
+        const cx = (e.clientX - rect.left) * (canvas.width / rect.width);
+        const dir = cx < player.x ? -1 : 1;
+        player.facing = dir;
+        shoot(dir);
+    });
+
+    function shoot(dir) {
+        const speed = 6.5;
+        const bx = player.x + dir * (player.w/2 + 6);
+        const by = player.y + player.h * 0.45;
+        bullets.push({x: bx, y: by, vx: dir * speed, r: 10});
+    }
+
+    function bulletHitsEnemy(b, e) {
+        const cx = Math.max(e.x, Math.min(b.x, e.x + e.w));
+        const cy = Math.max(e.y, Math.min(b.y, e.y + e.h));
+        const dx = b.x - cx, dy = b.y - cy;
+        return (dx*dx + dy*dy) <= (b.r * b.r);
+    }
+
+    function drawPlayer() {
+        ctx.save();
+        ctx.translate(player.x, player.y);
+        ctx.scale(player.facing, 1); 
+
+        ctx.drawImage(
+            sprites.player,
+            -player.w/2,
+            0,
+            player.w,
+            player.h
+        );
+
+        ctx.restore();
+    }
+
+    function drawBullet(b) {
+        ctx.drawImage(
+            sprites.bullet,
+            b.x - b.r,
+            b.y - b.r,
+            b.r * 2,
+            b.r * 2
+        );
+    }
+
+
+    function drawEnemy(e) {
+        ctx.drawImage(
+            sprites.enemy,
+            e.x,
+            e.y,
+            e.w,
+            e.h
+        );
+    }
+
+
+    function drawGround() {
+        const groundHeight = H - groundY;
+
+        ctx.drawImage(
+            sprites.floor,
+            0,
+            groundY,
+            W,
+            groundHeight
+        );
+    }
+
+    // Main loop
+    let last = performance.now();
+    function loop(now) {
+        const dt = now - last;
+        last = now;
+
+        spawnTimer += dt;
+        if (spawnTimer >= spawnInterval) {
+            spawnTimer = 0;
+            spawnEnemy();
+        }
+
+        for (let i = bullets.length - 1; i >=0; i--) {
+            const b = bullets[i];
+            b.x += b.vx;
+            if (b.x < -20 || b.x > W + 20) bullets.splice(i,1);
+            else {
+                for (let j = enemies.length - 1; j >= 0; j--) {
+                    if (bulletHitsEnemy(b, enemies[j])) {
+                        enemies.splice(j,1);
+                        bullets.splice(i,1);
+                        score++;
+                        scoreEl.textContent = score;
+                        break;
+                    }
+                }
+            }
+        }
+
+        for (let i = enemies.length - 1; i >=0; i--) {
+            const e = enemies[i];
+            e.x += e.vx;
+            const stopXLeft = player.x - 60;
+            const stopXRight = player.x + 20;
+            if ((e.vx > 0 && e.x > stopXLeft) || (e.vx < 0 && e.x < stopXRight)) {
+                e.vx *= 0.6;
+            }
+            if (e.x < -60 || e.x > W + 60) {
+                enemies.splice(i,1);
+            }
+        }
+
+        ctx.drawImage(sprites.background, 0, 0, W, H);
+
+
+        drawGround();
+        drawPlayer();
+        enemies.forEach(drawEnemy);
+        bullets.forEach(drawBullet);
+
+        requestAnimationFrame(loop);
+    }
+
+    // start
+    requestAnimationFrame(loop);
+
+    for (let i=0;i<2;i++) spawnEnemy();
+
+    </script>
+</body>
+</html>
