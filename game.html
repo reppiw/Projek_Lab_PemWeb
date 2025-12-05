@@ -87,50 +87,70 @@
     let enemies = [];
     let score = 0;
 
-    const HIGHSCORE_KEY = 'geometrisatu_highscores_v1';
+    
 
-    const loadHighscores = () => {
-        try { return JSON.parse(localStorage.getItem(HIGHSCORE_KEY)) || []; }
-        catch { return []; }
-    };
-
-    const writeHighscores = (list) => {
-        try { localStorage.setItem(HIGHSCORE_KEY, JSON.stringify(list)); } catch {}
-    };
-
-    function saveHighscore(name, sc) {
-        const list = loadHighscores();
-        list.push({name: name || 'Player', score: sc || 0, date: new Date().toISOString()});
-        list.sort((a,b) => b.score - a.score);
-        writeHighscores(list.slice(0, 10));
-        renderHighscores();
+    async function loadHighscores(){
+        const res = await fetch("http://localhost:3000/api/highscores");
+        return await res.json();
     }
-
-    function renderHighscores() {
-        const list = loadHighscores();
-        hsListEl.innerHTML = '';
-        if (list.length === 0) { hsListEl.textContent = '(no highscores yet)'; return; }
-
-        const ol = document.createElement('ol');
-        list.forEach(it => {
-            const li = document.createElement('li');
-            li.textContent = `${it.name} — ${it.score}`;
+    
+    async function renderHighscores(){
+        const list = await loadHighscores();
+        hsListEl.innerHTML = "";
+        if (list.length === 0){
+            hsListEl.textContent = "(no highscores yet)";
+            return;
+        }
+        
+        const ol = document.createElement("ol");
+        list.forEach(r => {
+            const li = document.createElement("li");
+            li.textContent = `${r.name} — ${r.score}`;
             ol.appendChild(li);
         });
         hsListEl.appendChild(ol);
-    }
-
-    function resetHighscores() { localStorage.removeItem(HIGHSCORE_KEY); renderHighscores(); }
-
-    saveBtn.onclick = () => {
-        if (score <= 0) return alert('Score is zero — play to score points first.');
-        const name = prompt('Name for highscore (max 20 chars):', 'Player') || 'Player';
-        saveHighscore(name.substring(0,20), score);
     };
 
-    resetBtn.onclick = () => { if (confirm('Reset all highscores?')) resetHighscores(); };
+    saveBtn.onclick = async () => {
+        if (score <= 0) {
+            alert("Score is zero — play first.");
+            return;
+        }
+        
+        const name = prompt("Enter your player name:", "Player") || "Player";
+        try {
+            // create player
+            const p = await fetch("http://localhost:3000/api/player",{
+                method: "POST", headers: {"Content-Type": "application/json"},
+                body: JSON.stringify({ name })
+            });
+            
+            const player = await p.json();
 
-    renderHighscores();
+        // save score 
+        await fetch("http://localhost:3000/api/highscore", {
+            method: "POST", headers: {"Content-Type": "application/json"},
+            body: JSON.stringify({
+                player_id: player.id,
+                score: score })
+            });
+            
+            alert("Score saved!");
+
+        } catch (err) {
+            console.error(err);
+            alert("Failed to save score.");
+        }
+    };
+
+    resetBtn.onclick = async () => {
+        if (!confirm("Reset all highscores?")) return;
+        await fetch("http://localhost:3000/api/highscores/reset", {
+            method: "POST"
+        });
+
+        renderHighscores();
+    };
 
     let keyLeft = false, keyRight = false;
 
