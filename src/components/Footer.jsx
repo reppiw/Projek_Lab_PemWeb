@@ -6,7 +6,7 @@ export default function Footer(){
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
           <div>
-            <img src="/images/logo_major.jpg" alt="GeometriSatu Logo" className="h-10 w-auto" />
+            <img src="/assets/images/logo_major.jpg" alt="GeometriSatu Logo" className="h-10 w-auto" />
             <p className="mt-4 text-gray-400">Bridging academic research and industry applications in game development at Universitas Sumatera Utara.</p>
           </div>
           <div>

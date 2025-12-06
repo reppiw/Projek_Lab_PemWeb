@@ -41,7 +41,7 @@ export default function Home(){
             <div className="flex flex-col md:flex-row gap-12">
               <div className="md:w-1/2">
                 <div className="relative">
-                  <img src="/images/fakultas.jpg" alt="About GeometriSatu" className="rounded-3xl shadow-xl mb-6 w-full" />
+                  <img src="/assets/images/fakultas.jpg" alt="About GeometriSatu" className="rounded-3xl shadow-xl mb-6 w-full" />
                   <div className="bg-white rounded-xl shadow-lg p-6 max-w-md mx-auto md:mx-0 md:absolute md:-bottom-10 md:right-10">
                     <div className="flex items-center space-x-4 mb-4">
                       <div className="flex-shrink-0">
@@ -183,7 +183,7 @@ export default function Home(){
             <div className="bg-white rounded-xl shadow-lg overflow-hidden">
                 <div className="flex flex-col md:flex-row">
                 <div className="md:w-1/2">
-                    <img src="/images/thumbnail_eduproject.jpg" alt="EduProject" className="w-full h-full object-cover" />
+                    <img src="/assets/images/thumbnail_eduproject.jpg" alt="EduProject" className="w-full h-full object-cover" />
                 </div>
                 <div className="md:w-1/2 p-8">
                     <div className="inline-block mb-3 px-3 py-1 bg-green-100 text-green-800 rounded-full text-xs font-medium">Current Project</div>

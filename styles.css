@@ -10,7 +10,7 @@ body {
 }
 
 .hero-bg {
-  background-image: linear-gradient(to right, rgba(75, 35, 181, 0.9), rgba(60, 28, 145, 0.95)), url('images/Apalah26.jpg');
+  background-image: linear-gradient(to right, rgba(75, 35, 181, 0.9), rgba(60, 28, 145, 0.95)), url('/assets/images/Apalah26.jpg');
   background-size: cover;
   background-position: center;
   position: relative;

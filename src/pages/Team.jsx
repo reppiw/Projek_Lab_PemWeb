@@ -33,7 +33,7 @@ export default function Team(){
         <h3 className="text-xl font-semibold mb-6 border-b pb-2">Owner</h3>
         <div className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-1 gap-6 max-w-sm mx-auto">
           <div className="bg-white rounded-xl shadow-md overflow-hidden">
-            <img src="/images/owner.jpg" alt="Owner" className="w-full h-48 object-cover" />
+            <img src="/assets/images/owner.jpg" alt="Owner" className="w-full h-48 object-cover" />
             <div className="p-4">
               <h4 className="font-semibold">Dr. Jos Timanta Tarigan S.Kom., M.Sc</h4>
               <p className="text-gray-500 text-sm mt-1">Lecturer @ Department of Computer Science, Faculty of Computer Science and Information Technology, Universitas Sumatera Utara</p>
@@ -46,7 +46,7 @@ export default function Team(){
         <h3 className="text-xl font-semibold mb-6 border-b pb-2">Current Members</h3>
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
             <div className="bg-white rounded-xl shadow-md transition-all duration-300 hover:shadow-xl hover:-translate-y-2 hover:scale-105">
-              <img src="/images/alex.jpg" alt="Team Member" className="w-full h-48 object-cover rounded-t-xl" />
+              <img src="/assets/images/alex.jpg" alt="Team Member" className="w-full h-48 object-cover rounded-t-xl" />
               <div className="p-4">
                 <h4 className="font-semibold">Alexander Yuanata</h4>
                 <div className="my-2 border-t border-gray-200"></div>
@@ -64,7 +64,7 @@ export default function Team(){
             </div>
 
             <div className="bg-white rounded-xl shadow-md overflow-hidden transition-all duration-300 hover:shadow-xl hover:-translate-y-2 hover:scale-105">
-              <img src="/images/Apalah26.jpg" alt="Team Member" className="w-full h-48 object-cover" />
+              <img src="/assets/images/Apalah26.jpg" alt="Team Member" className="w-full h-48 object-cover" />
               <div className="p-4">
                 <h4 className="font-semibold">Elin Betsey Br Ginting</h4>
                 <div className="my-2 border-t border-gray-200"></div>
@@ -77,7 +77,7 @@ export default function Team(){
             </div>
 
             <div className="bg-white rounded-xl shadow-md transition-all duration-300 hover:shadow-xl hover:-translate-y-2 hover:scale-105">
-              <img src="/images/ferdinand.jpg" alt="Team Member" className="w-full h-48 object-cover rounded-t-xl" />
+              <img src="/assets/images/ferdinand.jpg" alt="Team Member" className="w-full h-48 object-cover rounded-t-xl" />
               <div className="p-4">
                 <h4 className="font-semibold">Ferdinand</h4>
                 <div className="my-2 border-t border-gray-200"></div>
@@ -95,7 +95,7 @@ export default function Team(){
             </div>
 
             <div className="bg-white rounded-xl shadow-md transition-all duration-300 hover:shadow-xl hover:-translate-y-2 hover:scale-105">
-              <img src="/images/Apalah26.jpg" alt="Team Member" className="w-full h-48 object-cover rounded-t-xl" />
+              <img src="/assets/images/Apalah26.jpg" alt="Team Member" className="w-full h-48 object-cover rounded-t-xl" />
               <div className="p-4">
                 <h4 className="font-semibold">Revita Kezia Pandiangan</h4>
                 <div className="my-2 border-t border-gray-200"></div>
@@ -113,7 +113,7 @@ export default function Team(){
             </div>
 
             <div className="bg-white rounded-xl shadow-md transition-all duration-300 hover:shadow-xl hover:-translate-y-2 hover:scale-105">
-              <img src="/images/Apalah26.jpg" alt="Team Member" className="w-full h-48 object-cover rounded-t-xl" />
+              <img src="/assets/images/Apalah26.jpg" alt="Team Member" className="w-full h-48 object-cover rounded-t-xl" />
               <div className="p-4">
                 <h4 className="font-semibold">Fernandez</h4>
                 <div className="my-2 border-t border-gray-200"></div>
@@ -131,7 +131,7 @@ export default function Team(){
             </div>
 
             <div className="bg-white rounded-xl shadow-md transition-all duration-300 hover:shadow-xl hover:-translate-y-2 hover:scale-105">
-              <img src="/images/Apalah26.jpg" alt="Team Member" className="w-full h-48 object-cover rounded-t-xl" />
+              <img src="/assets/images/Apalah26.jpg" alt="Team Member" className="w-full h-48 object-cover rounded-t-xl" />
               <div className="p-4">
                 <h4 className="font-semibold">Kevin Maverick</h4>
                 <div className="my-2 border-t border-gray-200"></div>

@@ -8,7 +8,7 @@
         html,body{height:100%;margin:0;color:#fff;font-family:Arial,Helvetica,sans-serif;background:linear-gradient(
             rgba(0, 0, 0, 0.5),
             rgba(0, 0, 0, 0.5)
-        ), url("gameyay/game/cover.jpg")}
+        ), url("/assets/game/cover.jpg")}
         .wrap{display:flex;flex-direction:column;align-items:center;padding:16px;gap:12px}
 
         .hud{width: min(1100px, 95%);max-width:95%;display:flex;justify-content:space-between;align-items:flex-start;gap:12px}
@@ -62,11 +62,11 @@
         floor: new Image()
     };
 
-    sprites.background.src = "gameyay/game/background.png";
-    sprites.player.src = "gameyay/game/player.png";
-    sprites.enemy.src = "gameyay/game/enemy.png";
-    sprites.bullet.src = "gameyay/game/bullet.png";
-    sprites.floor.src = "gameyay/game/floor.png";
+    sprites.background.src = "/assets/game/background.png";
+    sprites.player.src = "/assets/game/player.png";
+    sprites.enemy.src = "/assets/game/enemy.png";
+    sprites.bullet.src = "/assets/game/bullet.png";
+    sprites.floor.src = "/assets/game/floor.png";
 
     const scoreEl = document.getElementById('score');
     const saveBtn = document.getElementById('saveScore');

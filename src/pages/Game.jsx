@@ -18,11 +18,11 @@ export default function Game(){
         floor: new Image()
     }
 
-    sprites.background.src = '/gameyay/game/background.png'
-    sprites.player.src = '/gameyay/game/player.png'
-    sprites.enemy.src = '/gameyay/game/enemy.png'
-    sprites.bullet.src = '/gameyay/game/bullet.png'
-    sprites.floor.src = '/gameyay/game/floor.png'
+    sprites.background.src = '/assets/game/background.png'
+    sprites.player.src = '/assets/game/player.png'
+    sprites.enemy.src = '/assets/game/enemy.png'
+    sprites.bullet.src = '/assets/game/bullet.png'
+    sprites.floor.src = '/assets/game/floor.png'
 
     const scoreEl = document.getElementById('score')
     const saveBtn = document.getElementById('saveScore')

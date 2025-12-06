@@ -25,7 +25,7 @@ export default function Project(){
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
             {/* Recreate cards for each game */}
             <div className="bg-white rounded-xl shadow-md overflow-hidden transition-all duration-300 hover:shadow-xl hover:-translate-y-1 flex flex-col h-full">
-                <img src="/images/thumbnail_edurobots.jpg" alt="Game 1" className="w-full h-40 object-cover" />
+                <img src="/assets/images/thumbnail_edurobots.jpg" alt="Game 1" className="w-full h-40 object-cover" />
                 <div className="p-4 flex flex-col flex-grow">
                 <h4 className="font-semibold text-lg">Edurobots</h4>
                 <p className="text-gray-500 text-sm mb-3">Shooter | Mobile</p>

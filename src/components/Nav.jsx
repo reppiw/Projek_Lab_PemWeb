@@ -10,7 +10,7 @@ export default function Nav() {
           <div className="flex items-center">
             <div className="flex-shrink-0 flex items-center">
               <Link to="/">
-                <img src="/images/logo_major.jpg" alt="Logo" className="h-[58px] w-auto" />
+                <img src="/assets/images/logo_major.jpg" alt="Logo" className="h-[58px] w-auto" />
               </Link>
             </div>
             <div className="hidden sm:ml-6 sm:flex sm:space-x-8">
