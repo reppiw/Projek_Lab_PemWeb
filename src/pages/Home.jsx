@@ -20,7 +20,7 @@ export default function Home(){
             <div className="lg:w-1/2 mt-12 lg:mt-0 relative">
                 <div className="relative animate-float">
                 <video autoPlay muted loop playsInline className="rounded-lg shadow-2xl mx-auto z-10 relative">
-                    <source src="/edurobots demo.mp4" type="video/mp4" />
+                  <source src="/assets/videos/edurobots demo.mp4" type="video/mp4" />
                     Your browser does not support the video tag.
                 </video>
                 <div className="absolute -bottom-4 -right-4 w-full h-full rounded-lg z-0" style={{backgroundColor: '#f5f5f5'}}></div>
