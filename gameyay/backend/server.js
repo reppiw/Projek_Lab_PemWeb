@@ -1,6 +1,7 @@
-const express = require("express");
-const cors = require("cors");
-const { Pool } = require("pg");
+import express from "express";
+import cors from "cors";
+import pkg from "pg";
+const { Pool } = pkg;
 
 const app = express();
 app.use(cors());
@@ -17,7 +18,13 @@ const pool = new Pool({
 // Register Player
 app.post("/api/player", async (req, res) => {
     const { name } = req.body;
-    p = await pool.query(
+    // check if player exists
+    const existing = await pool.query("SELECT * FROM players WHERE name=$1", [name]);
+    if (existing.rows.length > 0) {
+        return res.json(existing.rows[0]);
+    }
+
+    const p = await pool.query(
         "INSERT INTO players (name) VALUES ($1) RETURNING *",
         [name]
     );
@@ -28,7 +35,7 @@ app.post("/api/player", async (req, res) => {
 // Save Highscore
 app.post("/api/highscore", async (req, res) => {
     const { player_id, score } = req.body;
-    
+
     await pool.query(
         "INSERT INTO highscores (player_id, score) VALUES ($1,$2)",
         [player_id, score]
@@ -39,14 +46,21 @@ app.post("/api/highscore", async (req, res) => {
 
 // Get Highscores
 app.get("/api/highscores", async (req, res) => {
-    const q = await pool.query(`
-        SELECT p.name, h.score
-        FROM highscores h
-        JOIN players p ON p.id = h.player_id
-        ORDER BY h.score DESC
-        LIMIT 20
+
+    try {
+    const p = await pool.query(`
+        SELECT players.name, MAX(highscores.score) as score
+        FROM highscores
+        JOIN players ON highscores.player_id = players.id
+        GROUP BY players.id, players.name
+        ORDER BY score DESC
+        LIMIT 3
     `);
-    res.json(q.rows);
+        res.json(p.rows);
+    }
+    catch (err) {
+        res.status(500).json({ error: err.message });
+    }
 });
 
 // Leaderboard
@@ -97,7 +111,6 @@ app.post('/achievements/unlock', async (req, res) => {
     res.json({ message: "Unlocked" });
 });
 
-// LIST ACHIEVEMENTS OF PLAYER
 app.get("/api/achievements/:playerName", async (req, res) => {
     const { playerName } = req.params;
 
@@ -112,4 +125,55 @@ app.get("/api/achievements/:playerName", async (req, res) => {
     res.json(q.rows);
 });
 
-app.listen(3000, () => console.log("Server running on port 3000"));
+app.listen(3000, async () => {
+    console.log("Server running on port 3000");
+
+    try {
+        await pool.query(`
+            CREATE TABLE IF NOT EXISTS players (
+                id SERIAL PRIMARY KEY,
+                name VARCHAR(255) UNIQUE NOT NULL
+            )
+        `);
+
+        await pool.query(`
+            CREATE TABLE IF NOT EXISTS highscores (
+                id SERIAL PRIMARY KEY,
+                player_id INTEGER REFERENCES players(id) ON DELETE CASCADE,
+                score INTEGER NOT NULL,
+                created_at TIMESTAMP DEFAULT NOW()
+            )
+        `);
+
+        await pool.query(`
+            CREATE TABLE IF NOT EXISTS achievements (
+                id SERIAL PRIMARY KEY,
+                title VARCHAR(255) UNIQUE NOT NULL,
+                description TEXT NOT NULL
+            )
+        `);
+
+        await pool.query(`
+            CREATE TABLE IF NOT EXISTS player_achievements (
+                id SERIAL PRIMARY KEY,
+                player_id INTEGER REFERENCES players(id) ON DELETE CASCADE,
+                achievement_id INTEGER REFERENCES achievements(id) ON DELETE CASCADE,
+                achieved_at TIMESTAMP DEFAULT NOW(),
+                UNIQUE (player_id, achievement_id)
+            )
+        `);
+
+        console.log('Ensured DB tables exist');
+
+        const check = await pool.query("SELECT COUNT(*) FROM achievements");
+        if (check.rows[0].count === '0') {
+            await pool.query(
+                "INSERT INTO achievements (title, description) VALUES ($1, $2), ($3, $4), ($5, $6)",
+                ['10 Kills in a Row', 'Get 10 kills in a row', '20 Kills in a Row', 'Get 20 kills in a row', '100 Kills in a Row', 'Get 100 kills in a row']
+            );
+            console.log("Achievements initialized");
+        }
+    } catch (err) {
+        console.error("Error during DB initialization:", err);
+    }
+});
