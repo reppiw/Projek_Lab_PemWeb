@@ -145,22 +145,6 @@ export default function Game(){
         }catch(e){ console.error(e); alert('Failed to set player') }
     }
 
-    // Change Player button
-    const changePlayerBtn = document.getElementById('changePlayer')
-    if (changePlayerBtn) {
-      changePlayerBtn.onclick = () => {
-        playerId = null
-        playerName = null
-        if (playerInput) { playerInput.disabled = false; playerInput.focus(); }
-        if (setPlayerBtn) setPlayerBtn.disabled = false
-
-        running = false
-        if (playBtn) playBtn.textContent = 'Play'
-        const playerLabel = document.getElementById('playerLabel')
-        if (playerLabel) playerLabel.textContent = ''
-      }
-    }
-
     if (restartBtn) {
       restartBtn.style.display = 'none'
       restartBtn.onclick = () => {
@@ -356,7 +340,6 @@ export default function Game(){
           <div className="mt-3 flex items-center gap-2">
             <input id="playerName" className="border p-1 rounded" placeholder="Player name" />
             <button id="setPlayer" className="bg-primary-600 text-white px-3 py-1 rounded">Set Player</button>
-            <button id="changePlayer" className="bg-gray-500 text-white px-3 py-1 rounded">Change Player</button>
             <div id="playerLabel" className="text-sm text-gray-600"></div>
           </div>
         </div>
