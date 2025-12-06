@@ -23,9 +23,8 @@ export default function Project(){
         <div className="mb-12">
             <h3 className="text-xl font-semibold mb-6 border-b pb-2">Our Games</h3>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            {/* Recreate cards for each game */}
             <div className="bg-white rounded-xl shadow-md overflow-hidden transition-all duration-300 hover:shadow-xl hover:-translate-y-1 flex flex-col h-full">
-                <img src="/assets/images/thumbnail_edurobots.jpg" alt="Game 1" className="w-full h-40 object-cover" />
+                <img src="/assets/images/thumbnail_edurobots.jpg" alt="Edurobots" className="w-full h-40 object-cover" />
                 <div className="p-4 flex flex-col flex-grow">
                 <h4 className="font-semibold text-lg">Edurobots</h4>
                 <p className="text-gray-500 text-sm mb-3">Shooter | Mobile</p>
@@ -36,7 +35,45 @@ export default function Project(){
                 </div>
                 </div>
             </div>
-            {/* Additional game cards can be added similarly */}
+
+            <div className="bg-white rounded-xl shadow-md overflow-hidden transition-all duration-300 hover:shadow-xl hover:-translate-y-1 flex flex-col h-full">
+                <img src="/assets/images/thumbnail_mathgo.png" alt="MathGO" className="w-full h-40 object-cover" />
+                <div className="p-4 flex flex-col flex-grow">
+                <h4 className="font-semibold text-lg">MathGO</h4>
+                <p className="text-gray-500 text-sm mb-3">Math | Mobile</p>
+                <p className="text-gray-600 text-sm mb-4 flex-grow">Sharpen your mind with MathGO and become a math wizard!</p>
+                <div className="mt-auto pt-2">
+                    <a href="https://play.google.com/store/apps/details?id=com.geometrisatu.mathgo2" target="_blank" rel="noreferrer" className="bg-primary-600 hover:bg-primary-700 text-white text-sm font-medium py-2 px-4 rounded-lg mr-2">Download</a>
+                    <a href="https://geometrisatu.id/eduproject/detail-mathgo/" className="text-primary-600 hover:text-primary-800 font-medium inline-flex items-center">Learn More</a>
+                </div>
+                </div>
+            </div>
+
+            <div className="bg-white rounded-xl shadow-md overflow-hidden transition-all duration-300 hover:shadow-xl hover:-translate-y-1 flex flex-col h-full">
+                <img src="/assets/images/thumbnail_scienceone.png" alt="ScienceOne" className="w-full h-40 object-cover" />
+                <div className="p-4 flex flex-col flex-grow">
+                <h4 className="font-semibold text-lg">ScienceOne</h4>
+                <p className="text-gray-500 text-sm mb-3">STEM | Mobile</p>
+                <p className="text-gray-600 text-sm mb-4 flex-grow">Science One is a fun brain-training game that trains your science know-how!</p>
+                <div className="mt-auto pt-2">
+                    <a href="https://play.google.com/store/apps/details?id=com.geometrisatu.scienceone2" target="_blank" rel="noreferrer" className="bg-primary-600 hover:bg-primary-700 text-white text-sm font-medium py-2 px-4 rounded-lg mr-2">Download</a>
+                    <a href="https://geometrisatu.id/eduproject/detail-scienceone/" className="text-primary-600 hover:text-primary-800 font-medium inline-flex items-center">Learn More</a>
+                </div>
+                </div>
+            </div>
+
+            <div className="bg-white rounded-xl shadow-md overflow-hidden transition-all duration-300 hover:shadow-xl hover:-translate-y-1 flex flex-col h-full">
+                <img src="/assets/images/thumbnail_superenglish.png" alt="Super English" className="w-full h-40 object-cover" />
+                <div className="p-4 flex flex-col flex-grow">
+                <h4 className="font-semibold text-lg">Super English</h4>
+                <p className="text-gray-500 text-sm mb-3">Language | Mobile</p>
+                <p className="text-gray-600 text-sm mb-4 flex-grow">Dive in, challenge yourself, and become a word master!</p>
+                <div className="mt-auto pt-2">
+                    <a href="https://play.google.com/store/apps/details?id=com.geometrisatu.superenglish2" target="_blank" rel="noreferrer" className="bg-primary-600 hover:bg-primary-700 text-white text-sm font-medium py-2 px-4 rounded-lg mr-2">Download</a>
+                    <a href="https://geometrisatu.id/eduproject/detail-superenglish/" className="text-primary-600 hover:text-primary-800 font-medium inline-flex items-center">Learn More</a>
+                </div>
+                </div>
+            </div>
             </div>
         </div>
         </main>
