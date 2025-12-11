@@ -1,6 +1,7 @@
 import React, { useEffect, useRef } from 'react'
 
 export default function Game(){
+  const API = "https://projek-lab-pem-web-qgxy.vercel.app";
   const canvasRef = useRef(null)
 
   useEffect(() => {
@@ -48,7 +49,7 @@ export default function Game(){
 
     function showAchievement(name){
         if (!achListEl) return
-        // replace '(none)' if first achievement
+
         if (achListEl.textContent.trim() === '(none)') achListEl.textContent = ''
         const item = document.createElement('div')
         item.className = 'text-sm text-green-700 mb-1'
@@ -58,7 +59,7 @@ export default function Game(){
 
     async function loadHighscores(){
         try{
-            const res = await fetch('http://localhost:3000/api/highscores')
+            const res = await fetch('${API}/api/highscores')
             return await res.json()
         }catch(e){ return [] }
     }
@@ -74,7 +75,7 @@ export default function Game(){
         list.forEach((r, idx) => { 
           const li = document.createElement('li')
           li.className = 'mb-2'
-          // support backend keys: name or player_name
+
           const name = r.name || r.player_name || 'Unknown'
           li.textContent = `${idx + 1}. ${name} — ${r.score} points`
           ol.appendChild(li) 
@@ -85,7 +86,7 @@ export default function Game(){
 
     async function fetchAchievements(name){
         try{
-            const res = await fetch(`http://localhost:3000/api/achievements/${encodeURIComponent(name)}`)
+            const res = await fetch(`${API}/api/achievements/${encodeURIComponent(name)}`)
             const list = await res.json()
             if (!achListEl) return
             achListEl.innerHTML = ''
@@ -109,7 +110,7 @@ export default function Game(){
         if (!playerId) { alert('Set your player first.'); return }
         if (score <= 0) { alert('Score is zero — play first.'); return }
         try {
-          const resp = await fetch('http://localhost:3000/api/highscore', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ player_id: playerId, score }) })
+          const resp = await fetch('${API}/api/highscore', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ player_id: playerId, score }) })
           const json = await resp.json()
           if (!resp.ok) throw new Error(json.error || 'Save failed')
           alert('Score saved!')
@@ -124,7 +125,7 @@ export default function Game(){
 
     if (resetBtn) resetBtn.onclick = async () => {
         if (!confirm('Reset all highscores?')) return
-        await fetch('http://localhost:3000/api/highscores/reset', { method: 'POST' })
+        await fetch('${API}/api/highscores/reset', { method: 'POST' })
         renderHighscores()
     }
 
@@ -132,7 +133,7 @@ export default function Game(){
         const name = playerInput && playerInput.value ? playerInput.value.trim() : ''
         if (!name) { alert('Enter a player name'); return }
         try{
-            const res = await fetch('http://localhost:3000/api/player', { method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify({ name }) })
+            const res = await fetch('${API}/api/player', { method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify({ name }) })
             const p = await res.json()
             playerId = p.id
             playerName = p.name
@@ -246,7 +247,7 @@ export default function Game(){
                     achievementsUnlocked.add(t)
                     showAchievement(`${t} Kills in a Row`)
                     if (playerName) {
-                        fetch('http://localhost:3000/achievements/unlock', { method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify({ playerName, achievementTitle: `${t} Kills in a Row` }) })
+                        fetch('${API}/achievements/unlock', { method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify({ playerName, achievementTitle: `${t} Kills in a Row` }) })
                             .then(()=> fetchAchievements(playerName))
                             .catch(e=>console.error('unlock failed', e))
                     }
