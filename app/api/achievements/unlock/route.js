@@ -16,3 +16,7 @@ export async function POST(req) {
     return Response.json({ error: err.message }, { status: 500 });
   }
 }
+
+export async function GET() {
+  return Response.json({ status: "achievements ok" });
+}

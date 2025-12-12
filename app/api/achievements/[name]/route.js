@@ -1,6 +1,6 @@
 import { pool } from '@/lib/db';
 
-export async function GET(_, { params }) {
+export async function GET(request, { params }) {
   try {
     const res = await pool.query(
       `SELECT title FROM achievements WHERE player_name = $1`,
@@ -9,6 +9,6 @@ export async function GET(_, { params }) {
 
     return Response.json(res.rows);
   } catch (err) {
-    return Response.json([], { status: 500 });
+    return Response.json({ error: err.message }, { status: 500 });
   }
 }
